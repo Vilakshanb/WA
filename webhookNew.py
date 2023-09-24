@@ -76,12 +76,9 @@ def wati_webhook():
         waid = data.get("waId")
         print(f"Received waid: {waid}")
         text = data.get("text")
-        print(f"Received text: {text}")
         listReply = data.get("listReply")
         if listReply:
             listReplyTitle = listReply.get("title")
-        else:
-            listReplyTitle = None
 
         # Print the received text
         print(f"Received text: {text}")
@@ -164,8 +161,9 @@ def wati_webhook():
             speak_rm(waid)
         elif text and text.lower() == "settings":
             send_settings_menu(waid)
+        elif (text.lower() == ""):
+            send_welcome_message(waid)
         else:
-            # Send a welcome message for unrecognized messages
             send_welcome_message(waid)
 
         return jsonify({"status": "success"}), 200
@@ -1387,39 +1385,3 @@ def speak_rm(waid):
 if __name__ == "__main__":
     app.run(port=8181, debug=True)
 
-
-
-vilakshan@Vilakshans-MacBook-Pro ~ % data='{
-         "LoginId": "1346403",
-         "MemberCode": "13464",
-         "Password": "Mpcpl@113g",
-         "TransType": "NEW",
-         "STPType": "AMC",
-         "ClientCode": "BZPPB4781I",
-         "FromBSESchemeCode": "RMFTSGP-GR",
-         "ToBSESchemeCode": "EOGP",
-         "BuySellType": "Fresh",
-         "TransactionMode": "P",
-         "FolioNo": "401170768713",
-         "STPRegNo": "",
-         "IntRefNo": "20230923134641001",
-         "StartDate": "10/10/2023",
-         "FrequencyType": "MONTHLY",
-         "NoOfTransfers": "12",
-         "InstAmount": "5000",
-         "InstUnit": "",
-         "FirstOrderToday": "Y",
-         "SubBrokerCode": "",
-         "EUINDeclaration": "N",
-         "EUINNumber": "",
-         "Remarks": "test",
-         "EndDate": "",
-         "SubBrokerARN": "",
-         "Filler1": "",
-         "Filler2": "",
-         "Filler3": "",
-         "Filler4": "",
-         "Filler5": ""
-     }'
-zsh: command not found: data
-vilakshan@Vilakshans-MacBook-Pro ~ % 

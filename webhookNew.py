@@ -53,7 +53,8 @@ def send_message_via_wati(waid, message):
             if response.status_code == 200:
                 print("Message sent successfully.")
             else:
-                print(f"Failed to send message. Status code: {response.status_code}")
+                print(
+                    f"Failed to send message. Status code: {response.status_code}")
                 print(
                     "Response content:", response.content
                 )  # Print API response for debugging
@@ -68,113 +69,8 @@ def get_rm_code(waid):
     return rmCode
 
 
-# app route defination to keep hearing for requests from wati
-@app.route("/webhook", methods=["POST"])
-def wati_webhook():
-    try:
-        data = request.json
-        waid = data.get("waId")
-        print(f"Received waid: {waid}")
-        text = data.get("text")
-        listReply = data.get("listReply")
-        if listReply:
-            listReplyTitle = listReply.get("title")
-
-        # Print the received text
-        print(f"Received text: {text}")
-
-        # Use the received text if it's not available
-        if text is None and listReplyTitle:
-            text = listReplyTitle
-
-        logger.info(f"Extracted waid: {waid}, text: {text}")
-        logger.info(f"Received payload: {data}")
-
-        # Check for specific messages and respond accordingly
-        if text and text.lower() == "hello":
-            send_welcome_message(waid)
-        elif text and text.lower() == "portfolio overview":
-            send_portfolio_overview_menu(waid)
-        elif text and text.lower() == "view holdings":
-            send_View_holding(waid)
-        elif text and text.lower() == "portfolio summary report":
-            send_portfolio_report_and_message(waid)
-        elif text and text.lower() == "capital gain (prev fy)":
-            year = datetime.now().year - 1
-            send_capital_gain_summary(waid, year)
-        elif text and text.lower() == "capital gain (curr fy)":
-            year = datetime.now().year
-            send_capital_gain_summary(waid, year)
-        elif text and text.lower() == "investment options":
-            send_investment_options_menu(waid)
-        elif text and text.lower() == "equity funds":
-            send_top5_equity(waid)
-        elif text and text.lower() == "large cap":
-            send_top5_large(waid)
-        elif text and text.lower() == "mid cap":
-            send_top5_mid(waid)
-        elif text and text.lower() == "small cap":
-            send_top5_small(waid)
-        elif text and text.lower() == "large and mid cap":
-            send_top5_large_mid(waid)
-        elif text and text.lower() == "multi cap":
-            send_top5_mutli(waid)
-        elif text and text.lower() == "flexi cap":
-            send_top5_flexi(waid)
-        elif text and text.lower() == "sectoral":
-            send_top5_sectoral(waid)
-        elif text and text.lower() == "debt funds":
-            send_top5_debt(waid)
-        elif text and text.lower() == "liquid funds":
-            send_top5_liquid(waid)
-        elif text and text.lower() == "overnight funds":
-            send_top5_overnight(waid)
-        elif text and text.lower() == "banking and psu Funds":
-            send_top5_banking_psu(waid)
-        elif text and text.lower() == "corporate bond funds":
-            send_top5_corporate(waid)
-        elif text and text.lower() == "credit risk funds":
-            send_top5_credit_risk(waid)
-        elif text and text.lower() == "hybrid funds":
-            send_top5_hybrid(waid)
-        elif text and text.lower() == "balanced advantage funds":
-            send_top5_balanced(waid)
-        elif text and text.lower() == "multi asset funds":
-            send_top5_multi_asset(waid)
-        elif text and text.lower() == "fixed deposit":
-            send_top5_fixed_deposit(waid)
-        elif text and text.lower() == "transaction history":
-            send_transaction_history_menu(waid)
-        elif text and text.lower() == "faqs":
-            send_faqs_menu(waid)
-        elif text and text.lower() == "how to invest?":
-            how_to_invest(waid)
-        elif text and text.lower() == "how to withdraw?":
-            how_to_withdraw(waid)
-        elif text and text.lower() == "check portfolio":
-            check_portfolio(waid)
-        elif text and text.lower() == "contact support":
-            contact_support(waid)
-        elif text and text.lower() == "taxation on mutual funds":
-            taxation(waid)
-        elif text and text.lower() == "speak to advisor":
-            speak_rm(waid)
-        elif text and text.lower() == "settings":
-            send_settings_menu(waid)
-        elif (text.lower() == ""):
-            send_welcome_message(waid)
-        else:
-            send_welcome_message(waid)
-
-        return jsonify({"status": "success"}), 200
-
-    except Exception as e:
-        logger.error(f"An error occurred: {str(e)}")
-        return jsonify({"error": "Internal server error"}), 500
-
-
-# working for sending welcome message
 def send_welcome_message(waid):
+
     try:
         headers = {
             "Authorization": WATI_BEARER_TOKEN,
@@ -223,7 +119,8 @@ def send_welcome_message(waid):
             )
 
     except Exception as e:
-        logger.error(f"An error occurred while sending the welcome message: {str(e)}")
+        logger.error(
+            f"An error occurred while sending the welcome message: {str(e)}")
 
 
 # send_portfolio_overview_menu
@@ -429,7 +326,8 @@ def send_faqs_menu(waid):
             )
 
     except Exception as e:
-        logger.error(f"An error occurred while sending the FAQs Menu: {str(e)}")
+        logger.error(
+            f"An error occurred while sending the FAQs Menu: {str(e)}")
 
 
 def send_speak_to_advisor_menu(waid):
@@ -541,7 +439,8 @@ def send_settings_menu(waid):
             )
 
     except Exception as e:
-        logger.error(f"An error occurred while sending the Settings Menu: {str(e)}")
+        logger.error(
+            f"An error occurred while sending the Settings Menu: {str(e)}")
 
 
 def send_View_holding(waid):
@@ -594,7 +493,8 @@ def send_top5_equity(waid):
     # Send the interactive message
     try:
         response = requests.post(url, json=payload, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -646,7 +546,8 @@ def send_top5_hybrid(waid):
     # Send the interactive message
     try:
         response = requests.post(url, json=payload, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -701,7 +602,8 @@ def send_top5_debt(waid):
     # Send the interactive message
     try:
         response = requests.post(url, json=payload, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -735,7 +637,8 @@ def send_top5_large(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -772,7 +675,8 @@ def send_top5_mid(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -807,7 +711,8 @@ def send_top5_small(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -842,7 +747,8 @@ def send_top5_large_mid(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -877,7 +783,8 @@ def send_top5_flexi(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -912,7 +819,8 @@ def send_top5_mutli(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -949,7 +857,8 @@ def send_top5_sectoral(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -986,7 +895,8 @@ def send_top5_liquid(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -1021,7 +931,8 @@ def send_top5_overnight(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -1056,7 +967,8 @@ def send_top5_banking_psu(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -1091,7 +1003,8 @@ def send_top5_corporate(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -1126,7 +1039,8 @@ def send_top5_credit_risk(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -1161,7 +1075,8 @@ def send_top5_balanced(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -1196,7 +1111,8 @@ def send_top5_multi_asset(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -1233,7 +1149,8 @@ def send_top5_fixed_deposit(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "Recommendation sent successfully!"}
         else:
@@ -1255,7 +1172,8 @@ def how_to_invest1(waid):
     # Send the interactive message
     try:
         response = requests.post(url, headers=headers)
-        print(f"API Response: {response.text}")  # Log the full response for debugging
+        # Log the full response for debugging
+        print(f"API Response: {response.text}")
         if response.status_code == 200:
             return {"message": "How to Invest sent successfully!"}
         else:
@@ -1371,17 +1289,121 @@ def speak_rm(waid):
     rmCode = get_rm_code(waid)
     url = f"{WATI_API_URL}/api/v1/sendTemplateMessage?whatsappNumber={waid}"
 
-    payload = {"broadcast_name": "rmDetails", "template_name": f"rm_detail_{rmCode}"}
+    payload = {"broadcast_name": "rmDetails",
+               "template_name": f"rm_detail_{rmCode}"}
     headers = {"content-type": "text/json", "Authorization": WATI_BEARER_TOKEN}
 
     response = requests.post(url, json=payload, headers=headers)
 
     print(response.text)
 
+# app route defination to keep hearing for requests from wati
 
-# print(speak_rm("919910076952", "vb"))
-# print(speak_rm("919910076952", "sm"))
+
+@app.route("/webhook", methods=["POST"])
+def wati_webhook():
+    try:
+        data = request.json
+        print(data)
+        waid = data.get("waId")
+        print(f"Received waid: {waid}")
+        text = data.get("text")
+        listReply = data.get("listReply")
+        if listReply:
+            listReplyTitle = listReply.get("title")
+
+        # Print the received text
+        print(f"Received text: {text}")
+
+        # Use the received text if it's not available
+        if text is None and listReplyTitle:
+            text = listReplyTitle
+
+        logger.info(f"Extracted waid: {waid}, text: {text}")
+        logger.info(f"Received payload: {data}")
+
+        # Check for specific messages and respond accordingly
+        if text and text.lower() == "hello":
+            send_welcome_message(waid)
+        elif text and text.lower() == "portfolio overview":
+            send_portfolio_overview_menu(waid)
+        elif text and text.lower() == "view holdings":
+            send_View_holding(waid)
+        elif text and text.lower() == "portfolio summary report":
+            send_portfolio_report_and_message(waid)
+        elif text and text.lower() == "capital gain (prev fy)":
+            year = datetime.now().year - 1
+            send_capital_gain_summary(waid, year)
+        elif text and text.lower() == "capital gain (curr fy)":
+            year = datetime.now().year
+            send_capital_gain_summary(waid, year)
+        elif text and text.lower() == "investment options":
+            send_investment_options_menu(waid)
+        elif text and text.lower() == "equity funds":
+            send_top5_equity(waid)
+        elif text and text.lower() == "large cap":
+            send_top5_large(waid)
+        elif text and text.lower() == "mid cap":
+            send_top5_mid(waid)
+        elif text and text.lower() == "small cap":
+            send_top5_small(waid)
+        elif text and text.lower() == "large and mid cap":
+            send_top5_large_mid(waid)
+        elif text and text.lower() == "multi cap":
+            send_top5_mutli(waid)
+        elif text and text.lower() == "flexi cap":
+            send_top5_flexi(waid)
+        elif text and text.lower() == "sectoral":
+            send_top5_sectoral(waid)
+        elif text and text.lower() == "debt funds":
+            send_top5_debt(waid)
+        elif text and text.lower() == "liquid funds":
+            send_top5_liquid(waid)
+        elif text and text.lower() == "overnight funds":
+            send_top5_overnight(waid)
+        elif text and text.lower() == "banking and psu Funds":
+            send_top5_banking_psu(waid)
+        elif text and text.lower() == "corporate bond funds":
+            send_top5_corporate(waid)
+        elif text and text.lower() == "credit risk funds":
+            send_top5_credit_risk(waid)
+        elif text and text.lower() == "hybrid funds":
+            send_top5_hybrid(waid)
+        elif text and text.lower() == "balanced advantage funds":
+            send_top5_balanced(waid)
+        elif text and text.lower() == "multi asset funds":
+            send_top5_multi_asset(waid)
+        elif text and text.lower() == "fixed deposit":
+            send_top5_fixed_deposit(waid)
+        elif text and text.lower() == "transaction history":
+            send_transaction_history_menu(waid)
+        elif text and text.lower() == "faqs":
+            send_faqs_menu(waid)
+        elif text and text.lower() == "how to invest?":
+            how_to_invest(waid)
+        elif text and text.lower() == "how to withdraw?":
+            how_to_withdraw(waid)
+        elif text and text.lower() == "check portfolio":
+            check_portfolio(waid)
+        elif text and text.lower() == "contact support":
+            contact_support(waid)
+        elif text and text.lower() == "taxation on mutual funds":
+            taxation(waid)
+        elif text and text.lower() == "speak to advisor":
+            speak_rm(waid)
+        elif text and text.lower() == "settings":
+            send_settings_menu(waid)
+        elif (text.lower() == ""):
+            send_welcome_message(waid)
+        else:
+            send_welcome_message(waid)
+
+        return jsonify({"status": "success"}), 200
+
+    except Exception as e:
+        logger.error(f"An error occurred: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
 
 if __name__ == "__main__":
     app.run(port=8181, debug=True)
-
